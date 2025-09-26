@@ -1,0 +1,25 @@
+server:
+  port: 8787
+
+spring:
+  application:
+    name: message
+
+    #What ever returning from the second function which is sms will be sent to the output binding communication-sent
+  cloud:
+    function:
+      definition: email|sms # means output of email goes into sms
+    stream:
+      bindings:
+        emailsms-in-0: # input binding
+          destination: send-communication   # in RabbitMQ creating a topic / queue named(exchange) send-communication
+          group: ${spring.application.name}
+        emailsms-out-0: # output binding
+          destination: communication-sent   # in RabbitMQ creating a topic / queue named(exchange) communication-sent
+
+  rebbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
